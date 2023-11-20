@@ -8,6 +8,7 @@ namespace AspNetWebApiSqlite.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class TodosController(TodosDbContext context) : ControllerBase
 {
     private readonly TodosDbContext _context = context;

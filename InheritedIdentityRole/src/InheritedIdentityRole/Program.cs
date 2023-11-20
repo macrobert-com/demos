@@ -1,5 +1,7 @@
 using AspNetWebApiSqlite.Data;
+using InheritedIdentityRole.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<TodosDbContext>(options =>
@@ -8,7 +10,12 @@ builder.Services.AddDbContext<TodosDbContext>(options =>
 });
 
 // Add services to the container.
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(builder.Configuration);
+builder.Services.AddAuthenticationService();
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -25,6 +32,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();
