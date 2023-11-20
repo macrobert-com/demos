@@ -399,3 +399,6 @@ FodyWeavers.xsd
 /src/AspNetWebApiSqlite/Default.db
 /src/AspNetWebApiSqlite/Default.db-shm
 /src/AspNetWebApiSqlite/Default.db-wal
+/src/InheritedIdentityRole/Default.db
+/src/InheritedIdentityRole/Default.db-shm
+/src/InheritedIdentityRole/Default.db-wal
