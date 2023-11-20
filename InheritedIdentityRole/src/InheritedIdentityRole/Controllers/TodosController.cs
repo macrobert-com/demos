@@ -8,13 +8,13 @@ namespace AspNetWebApiSqlite.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
 public class TodosController(TodosDbContext context) : ControllerBase
 {
     private readonly TodosDbContext _context = context;
 
     // GET: api/Todos
     [HttpGet]
+    [Authorize(Roles="User")]
     public async Task<ActionResult<IEnumerable<Todo>>> GetTodos()
     {
         if (_context.Todos == null)
@@ -26,6 +26,7 @@ public class TodosController(TodosDbContext context) : ControllerBase
 
     // GET: api/Todos/5
     [HttpGet("{id}")]
+    [Authorize(Roles = "User")]
     public async Task<ActionResult<Todo>> GetTodo(int id)
     {
         if (_context.Todos == null)
@@ -45,6 +46,7 @@ public class TodosController(TodosDbContext context) : ControllerBase
     // PUT: api/Todos/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
+    [Authorize(Roles = "Manager")]
     public async Task<IActionResult> PutTodo(int id, Todo todo)
     {
         if (id != todo.Id)
@@ -76,6 +78,7 @@ public class TodosController(TodosDbContext context) : ControllerBase
     // POST: api/Todos
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
+    [Authorize(Roles = "Manager")]
     public async Task<ActionResult<Todo>> PostTodo(Todo todo)
     {
         if (_context.Todos == null)
@@ -90,6 +93,7 @@ public class TodosController(TodosDbContext context) : ControllerBase
 
     // DELETE: api/Todos/5
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> DeleteTodo(int id)
     {
         if (_context.Todos == null)
