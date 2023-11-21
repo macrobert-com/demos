@@ -2,7 +2,7 @@
 
 namespace InheritedIdentityRole.Auth;
 
-public class InheritableIdentityRole : IdentityRole<string>
+public class InheritableIdentityRole : InheritableIdentityRole<string>
 {
     public InheritableIdentityRole()
     {
@@ -13,7 +13,11 @@ public class InheritableIdentityRole : IdentityRole<string>
     {
         Name = roleName;
     }
-
-    public ICollection<RoleHierarchy> ChildRoles { get; set; }
 }
 
+public class InheritableIdentityRole<TKey> 
+    : IdentityRole<TKey>
+    where TKey : IEquatable<TKey>
+{
+    public ICollection<RoleHierarchy> ChildRoles { get; set; }
+}

@@ -10,7 +10,7 @@ builder.Services.AddDbContext<TodosDbContext>(options =>
 });
 
 // Add services to the container.
-builder.Services.ConfigureIdentity();
+builder.Services.ConfigureInheritableIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
 builder.Services.AddAuthenticationService();
 builder.Services.AddAutoMapper(typeof(Program));
