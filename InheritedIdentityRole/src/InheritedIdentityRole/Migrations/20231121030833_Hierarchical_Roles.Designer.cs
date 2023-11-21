@@ -3,6 +3,7 @@ using System;
 using AspNetWebApiSqlite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InheritedIdentityRole.Migrations
 {
     [DbContext(typeof(TodosDbContext))]
-    partial class TodosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231121030833_Hierarchical_Roles")]
+    partial class Hierarchical_Roles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
