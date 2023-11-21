@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using Dapper;
 
 namespace InheritedIdentityRole.Auth;
 
@@ -17,27 +18,22 @@ public class InheritableRoleStore<TContext>
 
     public async Task<List<InheritableIdentityRole>> GetInheritedRolesAsync(InheritableIdentityRole role, CancellationToken cancellationToken = default(CancellationToken))
     {
-        var inheritedRoles = new List<InheritableIdentityRole>();
-
-        var rolesToProcess = new Queue<InheritableIdentityRole>();
-        rolesToProcess.Enqueue(role);
-
-        while (rolesToProcess.Count > 0)
-        {
-            var currentRole = rolesToProcess.Dequeue();
-            var parentRoles = await GetChildRolesAsync(currentRole, cancellationToken);
-
-            foreach (var parentRole in parentRoles)
-            {
-                // Avoid adding duplicate roles
-                if (!inheritedRoles.Contains(parentRole))
-                {
-                    inheritedRoles.Add(parentRole);
-                    rolesToProcess.Enqueue(parentRole);
-                }
-            }
-        }
-
+        const string InheritedRolesQuery = @"
+WITH InheritedRoles AS (
+    SELECT r.Id, r.Name
+    FROM AspNetRoles r
+    WHERE r.Id = @RoleId
+    UNION ALL
+    SELECT r.Id, r.Name
+    FROM AspNetRoles r
+    JOIN RoleHierarchies ir ON r.Id = ir.ParentRoleId
+    JOIN InheritedRoles ON ir.ChildRoleId = InheritedRoles.Id
+)
+SELECT InheritedRoles.Id, InheritedRoles.Name FROM InheritedRoles;
+";
+        using var connection = Context.Database.GetDbConnection();
+        var result = await connection.QueryAsync<InheritableIdentityRole>(InheritedRolesQuery, new { RoleId = role.Id });
+        var inheritedRoles = new List<InheritableIdentityRole>(result);
         return inheritedRoles;
     }
 
